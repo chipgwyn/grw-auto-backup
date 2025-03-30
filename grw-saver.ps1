@@ -10,6 +10,10 @@
 ## USER VARS #########################################################################################
 # Fill out the following vars to suit your installation
 
+# The full path to Ubisoft UPlay
+#$UPLAY_EXEC = "C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\UplayWebCore.exe"
+$UPLAY_EXEC = "C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe"
+
 # This is the location of the Ghost Recon Wildlands executable
 $GRW_EXEC = "D:\Program Files\GhostRecon\Tom Clancy's Ghost Recon Wildlands\GRW.exe"
 # This is where Ubisoft saves games by default
@@ -66,9 +70,21 @@ function Get-RecentBackup {
 #########################################################################################
 # Script starts here
 
+# Uplay needs to be running...mostly.  Make sure it is before trying to run the game
+try
+{
+    Get-Process -Name "UplayWebCore" -ErrorAction Stop > $null
+} catch {
+    Write-Host "Uplay doesn't seem to be running...starting it"
+    & $UPLAY_EXEC
+    Start-Sleep -Seconds 10
+}
+
+
 # If it's been more the 72 hours (3 days, go head and make a backup before we start)
 Get-RecentBackup -expiredTimeInHours $EXPIRETIME
 
+# Start the game
 $grw_working_dir = $(Split-Path -Path $GRW_EXEC -Parent)
 Write-Output "Starting Ghost Recon Wildlands with auto-saver..."
 Set-Location -Path $grw_working_dir
