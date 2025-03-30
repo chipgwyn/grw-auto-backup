@@ -11,7 +11,6 @@
 # Fill out the following vars to suit your installation
 
 # The full path to Ubisoft UPlay
-#$UPLAY_EXEC = "C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\UplayWebCore.exe"
 $UPLAY_EXEC = "C:\Program Files (x86)\Ubisoft\Ubisoft Game Launcher\UbisoftConnect.exe"
 
 # This is the location of the Ghost Recon Wildlands executable
