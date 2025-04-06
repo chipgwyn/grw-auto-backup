@@ -6,6 +6,13 @@
 # to another folder that is time-date stamped.  This way every time the game is exited
 # a backup is made.
 
+## Command Line Arguments ##############################################################################
+# There's only one right now, if we provide -BackupOnly then the script will not try and launch the game
+# It will perform the backup and then exit
+param (
+    [String]$BackupOnly = $false
+)
+
 
 ## USER VARS #########################################################################################
 # Fill out the following vars to suit your installation
@@ -69,6 +76,14 @@ function Get-RecentBackup {
 #########################################################################################
 # Script starts here
 
+if ($BackupOnly) {
+    Write-Host "'BackupOnly' specified, doing a backup and exiting..."
+    Save-Backup
+    Start-Sleep -Seconds 3
+    Write-Output "done..."
+    Exit 1
+}
+
 # Uplay needs to be running...mostly.  Make sure it is before trying to run the game
 try
 {
@@ -79,7 +94,6 @@ try
     Start-Sleep -Seconds 10
 }
 
-
 # If it's been more the 72 hours (3 days, go head and make a backup before we start)
 Get-RecentBackup -expiredTimeInHours $EXPIRETIME
 
@@ -88,7 +102,6 @@ $grw_working_dir = $(Split-Path -Path $GRW_EXEC -Parent)
 Write-Output "Starting Ghost Recon Wildlands with auto-saver..."
 Set-Location -Path $grw_working_dir
 Start-Process -FilePath $GRW_EXEC -WorkingDirectory $grw_working_dir -Wait
-
 
 # wait time after game exits to let files be fully written
 $wait_time = $WAITTIME
